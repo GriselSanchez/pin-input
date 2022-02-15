@@ -20,7 +20,11 @@ const Pin = ({ pinValues, setPinValues, color = "#000" }: Props) => {
 
   const setFocus = (id: number) => {
     const next = inputsRef.current[id];
-    if (next) next.focus();
+    if (next) {
+      next.focus();
+      /* iOS bug */
+      next.click();
+    }
   };
 
   const removeValues = (position: number, value?: number) =>
@@ -34,6 +38,8 @@ const Pin = ({ pinValues, setPinValues, color = "#000" }: Props) => {
     { nativeEvent: { code, key } }: React.KeyboardEvent<HTMLInputElement>,
     position: number
   ) => {
+    const value = Number(key.trim());
+
     if (invalidCodes.some((invalidCode) => code === invalidCode)) {
       setPinValues([...pinValues]);
       return false;
@@ -47,15 +53,15 @@ const Pin = ({ pinValues, setPinValues, color = "#000" }: Props) => {
       case KeyCode.TAB:
         setFocus(position);
         break;
-      default:
-        const value = Number(key.trim());
-        if (isNaN(value) || (value && (value < 0 || value > 9))) {
+      default: {
+        if (Number.isNaN(value) || (value && (value < 0 || value > 9))) {
           setPinValues([...pinValues]);
           return false;
         }
         removeValues(position, value);
         setFocusPosition(position + 1);
         break;
+      }
     }
 
     return true;
@@ -73,8 +79,11 @@ const Pin = ({ pinValues, setPinValues, color = "#000" }: Props) => {
         if (el) inputsRef.current[id] = el;
       }}
       onKeyUp={(e) => onInputChange(e, id)}
-      onChange={(e) => e.preventDefault()}
+      onChange={() => setFocusPosition(id)}
+      onFocus={() => setFocusPosition(id)}
       autoComplete="chrome-off"
+      inputMode="numeric"
+      pattern="\d*"
       $hasValue={pinValues[id] !== undefined}
       $isVisible={isPasswordVisible}
       $color={color}

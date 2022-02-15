@@ -7,15 +7,16 @@ interface StyledPinInputProps {
 }
 
 export const StyledPinInput = styled.input<StyledPinInputProps>`
-  border-radius: 10px;
   height: 40px;
+  width: 100%;
   text-align: center;
   font-weight: 600;
+  font-size: 16px;
   -webkit-text-security: ${(props) => (props.$isVisible ? "none" : "disc")};
 
   background: ${(props) => (props.$hasValue ? props.$color : "white")};
   color: ${(props) => (props.$hasValue ? "white" : "black")};
-  border: ${(props) => (props.$hasValue ? "none" : `1px solid black`)};
+  border-radius: 25px;
 
   ::-webkit-outer-spin-button,
   ::-webkit-inner-spin-button {
@@ -31,9 +32,11 @@ export const StyledPinInput = styled.input<StyledPinInputProps>`
 export const StyledContainer = styled.div`
   position: absolute;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 1fr;
-  grid-column-gap: 20px;
-  align-items: center;
   box-sizing: border-box;
+  width: 90%;
+
+  grid-template-columns: repeat(4, 1fr) 5%;
+  grid-template-rows: 1fr;
+  grid-column-gap: 4%;
+  align-items: center;
 `;
